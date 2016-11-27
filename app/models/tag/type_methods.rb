@@ -85,9 +85,9 @@ module Tag::TypeMethods
     def tag_list_order(tag_type)
       case tag_type
         when "artist" then 0
-        when "circle" then 1
-        when "copyright" then 2
-        when "character" then 3
+        when "copyright" then 1
+        when "terminology" then 2
+        when "meta" then 3
         when "general" then 5
         when "faults" then 6
         else 4

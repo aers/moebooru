@@ -554,11 +554,11 @@ ul.link-page > li {
   color: #33CFFF;
 }
 
-.tag-type-character > a, #history .tag-type-character, .color-tag-types .tag-type-character {
+.tag-type-terminology > a, #history .tag-type-terminology, .color-tag-types .tag-type-terminology {
   color: #0A0;
 }
 
-.tag-type-character > a:hover {
+.tag-type-terminology > a:hover {
   color: #33CFFF;
 }
 
@@ -567,6 +567,14 @@ ul.link-page > li {
 }
 
 .tag-type-copyright > a:hover {
+  color: #33CFFF;
+}
+
+.tag-type-meta > a, #history .tag-type-meta, .color-tag-types .tag-type-meta {
+  color: #CE0B0B;
+}
+
+.tag-type-meta > a:hover {
   color: #33CFFF;
 }
 
