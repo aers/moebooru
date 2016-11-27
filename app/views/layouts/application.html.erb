@@ -6,9 +6,8 @@
 <% end %>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
   <title><%= html_title %></title>
-  <% if @meta_description %>
-    <%= tag "meta", :name => "description", :content => @meta_description %>
-  <% end %>
+  <meta name="description" content="sakugabooru - a booru dedicated to sakuga videos and images">
+  <meta name="keywords" content="japan,anime,animation,sakuga,gif,apng,image,webm,mp4,作画,アニメ">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="top" title="<%= CONFIG["app_name"] %>" href="/">
   <% if @canonical_url.present? %>
