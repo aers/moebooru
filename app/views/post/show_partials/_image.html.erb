@@ -27,6 +27,16 @@
       </object>
 
       <p><%= link_to t('.save_flash'), @post.file_url %></p>
+    <% elsif @post.webm? %>
+      <video width="<%= @post.width %>" height="<%= @post.height%>" controls="true" autoplay="true" loop="true">
+        <source src="<%= @post.file_url %>" type="video/webm">
+        Your browser does not support webm video.
+      </video>
+    <% elsif @post.mp4? %>
+        <video width="<%= @post.width %>" height="<%= @post.height%>" controls="true" autoplay="true" loop="true">
+          <source src="<%= @post.file_url %>" type="video/mp4">
+          Your browser does not support mp4 video.
+        </video>
     <% else %>
       <h2><a href="<%= @post.file_url %>"><%= t('.download._') %></a></h2>
       <p><%= t('.download.info') %></p>

@@ -10,7 +10,7 @@ module Post::ImageStore::Local2
   end
 
   def preview_path
-    if image?
+    if image? or video?
       "#{Rails.root}/public/data/preview/#{file_hierarchy}/#{md5}.jpg"
     else
       "#{Rails.root}/public/download-preview.png"
@@ -42,7 +42,7 @@ module Post::ImageStore::Local2
   def preview_url
     if status == "deleted"
       "#{base_url :assets}/deleted-preview.png"
-    elsif image?
+    elsif image? or video?
       "#{base_url :assets}/data/preview/#{file_hierarchy}/#{md5}.jpg"
     else
       "#{base_url :assets}/download-preview.png"
@@ -76,6 +76,7 @@ module Post::ImageStore::Local2
   def delete_file
     FileUtils.rm_f(file_path)
     FileUtils.rm_f([preview_path, sample_path, jpeg_path]) if image?
+    FileUtils.rm_f(preview_path) if video?
   end
 
   def move_one_file(src_path, target_path)
@@ -86,7 +87,7 @@ module Post::ImageStore::Local2
 
   def move_file
     move_one_file(tempfile_path, file_path)
-    move_one_file(tempfile_preview_path, preview_path) if image?
+    move_one_file(tempfile_preview_path, preview_path) if image? or video?
     move_one_file(tempfile_sample_path, sample_path) if File.exist?(tempfile_sample_path)
     move_one_file(tempfile_jpeg_path, jpeg_path) if File.exist?(tempfile_jpeg_path)
 

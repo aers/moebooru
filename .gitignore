@@ -12,3 +12,7 @@
 /public/sitemap*.xml.gz
 /tmp
 /vendor/bundle
+
+
+.idea/
+moebooru.iml

@@ -1,5 +1,6 @@
 require "download"
 require "zlib"
+require "filemagic"
 
 # These are methods dealing with getting the image and generating the thumbnail.
 # It works in conjunction with the image_store methods. Since these methods have
@@ -13,6 +14,7 @@ module Post::FileMethods
     m.before_validation :strip_exif, :on => :create
     m.before_validation :generate_hash, :on => :create
     m.before_validation :set_image_dimensions, :on => :create
+    m.before_validation :check_video_max_dimensions, :on => :create
     m.before_validation :set_image_status, :on => :create
     m.before_validation :check_pending_count, :on => :create
     m.before_validation :generate_sample, :on => :create
@@ -40,7 +42,7 @@ module Post::FileMethods
   end
 
   def validate_content_type
-    unless %w(jpg png gif swf).include?(file_ext.downcase)
+    unless %w(jpg png gif swf webm mp4).include?(file_ext.downcase)
       errors.add(:file, "is an invalid content type: " + file_ext.downcase)
       throw :abort
     end
@@ -196,7 +198,7 @@ module Post::FileMethods
   end
 
   def generate_preview
-    return true unless image? && width && height
+    return true unless (image? or video?) && width && height
 
     size = Moebooru::Resizer.reduce_to({ :width => width, :height => height }, :width => 300, :height => 300)
 
@@ -218,11 +220,21 @@ module Post::FileMethods
       return false
     end
 
-    begin
-      Moebooru::Resizer.resize(ext, path, tempfile_preview_path, size, 85)
-    rescue => x
-      errors.add "preview", "couldn't be generated (#{x})"
-      return false
+    if image?
+      begin
+        Moebooru::Resizer.resize(ext, path, tempfile_preview_path, size, 85)
+      rescue => x
+        errors.add "preview", "couldn't be generated (#{x})"
+        return false
+      end
+    elsif video?
+      begin
+        movie = VideoTools.new(path)
+        movie.generate_preview(tempfile_preview_path, size)
+      rescue => x
+        errors.add "preview", "couldn't be generated (#{x})"
+        return false
+      end
     end
 
     true
@@ -262,11 +274,10 @@ module Post::FileMethods
       return false
     end
 
-    imgsize = ImageSize.path(tempfile_path)
-
-    unless imgsize.format.nil?
-      self.file_ext = imgsize.format.to_s.gsub(/jpeg/i, "jpg").downcase
-    end
+    FileMagic.open(:mime) { |fm|
+      mimetype = fm.file(tempfile_path, true)
+      self.file_ext = content_type_to_file_ext(mimetype)
+    }
   end
 
   # Assigns a CGI file to the post. This writes the file to disk and generates a unique file name.
@@ -290,8 +301,33 @@ module Post::FileMethods
       imgsize = ImageSize.path(tempfile_path)
       self.width = imgsize.width
       self.height = imgsize.height
+    elsif video?
+      video = VideoTools.new(tempfile_path)
+      if not video.valid?
+        errors.add "video", "webm or mp4 file is not a valid video file"
+        return false
+      end
+      if not video.allowed_codec?
+        errors.add "video", "only h264 in mp4 and vp8 in webm are allowed video formats"
+        return false
+      end
+      if video.has_audio?
+        errors.add "video", "audio is not allowed in uploaded videos"
+        return false
+      end
+      self.width = video.width
+      self.height = video.height
     end
     self.file_size = File.size(tempfile_path) rescue 0
+  end
+
+  def check_video_max_dimensions
+    if video?
+      if self.height > 480
+        errors.add "video", "video height is over max dimension (480)"
+        return false
+      end
+    end
   end
 
   # If the image resolution is too low and the user is privileged or below, force the
@@ -339,6 +375,18 @@ module Post::FileMethods
     file_ext == "swf"
   end
 
+  def webm?
+    file_ext == "webm"
+  end
+
+  def mp4?
+    file_ext == "mp4"
+  end
+
+  def video?
+    webm? || mp4?
+  end
+
   def find_ext(file_path)
     ext = File.extname(file_path)
     if ext.blank?
@@ -364,11 +412,20 @@ module Post::FileMethods
     when "application/x-shockwave-flash"
       return "swf"
 
+      when "video/mp4"
+        return "mp4"
+
+      when "video/webm"
+        return "webm"
+
+    else
+      return content_type
+
     end
   end
 
   def raw_preview_dimensions
-    if image?
+    if image? or video?
       dim = Moebooru::Resizer.reduce_to({ :width => width, :height => height }, :width => 300, :height => 300)
       return [dim[:width], dim[:height]]
     else
@@ -377,7 +434,7 @@ module Post::FileMethods
   end
 
   def preview_dimensions
-    if image?
+    if image? or video?
       dim = Moebooru::Resizer.reduce_to({ :width => width, :height => height }, :width => 150, :height => 150)
       return [dim[:width], dim[:height]]
     else

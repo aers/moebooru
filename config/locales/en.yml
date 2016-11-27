@@ -844,6 +844,7 @@ en:
         delete: Delete
         download:
           image: Image
+          video: Video
           larger: Download larger version
           normal: Download
         favorites:
