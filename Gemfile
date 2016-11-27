@@ -39,6 +39,7 @@ gem "image_size"
 gem "ruby-filemagic"
 gem "streamio-ffmpeg"
 gem "i18n-js", ">= 3.0.0.rc7"
+gem "i18n-tasks"
 
 group :standalone do
   platform :mri do
