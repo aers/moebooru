@@ -1,5 +1,5 @@
 local_cache [@posts.map(&:id), params[:verbose]], expires: 1.hour do
-  atom_feed :root_url => url_for(:controller => :post, :action => :index, :tags => params[:tags], :only_path => false) do |feed|
+  atom_feed :root_url => url_for(:controller => :post, :action => :index, :tags => params[:tags], :only_path => false, :protocol => 'https') do |feed|
     feed.title CONFIG['app_name']
     feed.updated @posts[0].created_at if @posts.length > 0
     @posts.each do |post|
@@ -12,7 +12,7 @@ local_cache [@posts.map(&:id), params[:verbose]], expires: 1.hour do
         entry.content render(:partial => 'post_atom', :formats => :html, :locals => { :post => post, :post_url => post_url }), :type => 'html'
         entry.author do |author|
           author.name post.author
-          author.uri url_for(:controller => :user, :action => :show, :id => post.user_id, :only_path => false)
+          author.uri url_for(:controller => :user, :action => :show, :id => post.user_id, :only_path => false, :protocol => 'https')
         end
       end
     end
