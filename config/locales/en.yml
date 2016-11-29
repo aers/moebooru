@@ -512,6 +512,10 @@ en:
         popular: Popular
         search: Search Tags
         view: View Tags
+      patreon:
+        _: Patreon
+      blog:
+        _: Blog
       wiki:
         _: Wiki
         create: Create New Page

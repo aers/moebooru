@@ -143,6 +143,12 @@
           <li><%= link_to t('.pools.create'), controller: '/pool', :action => :create %></li>
         </ul>
       </li>
+      <li class="blog"><a href="https://sakugablog.yshi.org"><%= t('.blog._') %></a>
+      	<%= link_to '■', '#', :class => 'submenu-button' %>
+      </li>
+      <li class="patreon"><a href="https://patreon.com/Sakugabooru"><%= t('.patreon._') %></a>
+      	<%= link_to '■', '#', :class => 'submenu-button' %>
+      </li>
       <li class="wiki"><%= link_to t('.wiki._'), { controller: '/wiki', :action => :show, :title => 'help:home' } %>
         <%= link_to '■', '#', :class => 'submenu-button' %>
         <ul class="search-box">
