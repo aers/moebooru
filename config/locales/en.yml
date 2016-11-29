@@ -516,6 +516,10 @@ en:
         _: Patreon
       blog:
         _: Blog
+      locale:
+        _: Locale
+        en: English
+        ja: Japanese
       wiki:
         _: Wiki
         create: Create New Page

@@ -149,6 +149,13 @@
       <li class="patreon"><a href="https://patreon.com/Sakugabooru"><%= t('.patreon._') %></a>
       	<%= link_to '■', '#', :class => 'submenu-button' %>
       </li>
+      <li class="locale"><%= link_to t('.locale._'), '#' %>
+        <%= link_to '■', '#', :class => 'submenu-button' %>
+        <ul class="submenu">
+          <li><%= link_to t('.locale.en'), :locale => 'en' %></li>
+          <li><%= link_to t('.locale.ja'), :locale => 'ja' %></li>
+        </ul>
+      </li>
       <li class="wiki"><%= link_to t('.wiki._'), { controller: '/wiki', :action => :show, :title => 'help:home' } %>
         <%= link_to '■', '#', :class => 'submenu-button' %>
         <ul class="search-box">
