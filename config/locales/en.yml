@@ -262,6 +262,7 @@ en:
   # view: /help
   help:
     index:
+      sakugabooru_help: sakugabooru specific help
       about: About Moebooru
       accounts: Accounts
       api: API

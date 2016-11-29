@@ -1,5 +1,6 @@
 <div class="help">
   <h1><%= t('.help') %></h1>
+  <h4><%= link_to t('.sakugabooru_help'), :controller => 'wiki', :action => 'show', :title => 'help:home' %></h4>
   <ul class="link-page">
     <li><%= link_to t('.about'), :controller => 'help', :action => 'about' %></li>
     <li><%= link_to t('.faq'), :controller => 'help', :action => 'faq' %></li>
@@ -26,7 +27,7 @@
     <li><%= link_to t('.ratings'), :controller => 'help', :action => 'ratings' %></li>
     <li><%= link_to t('.source'), :controller => 'help', :action => 'source_code' %></li>
     <li><%= link_to t('.tag_scripts'), :controller => 'help', :action => 'tag_scripts' %></li>
-    <li><%= link_to t('.tags'), :controller => 'help', :action => 'tags' %></li>
+    <li><%= link_to t('.tags'), :controller => 'wiki', :action => 'show', :title => 'tag_guidelines' %></li>
     <li><%= link_to t('.tag_aliases'), :controller => 'help', :action => 'tag_aliases' %></li>
     <li><%= link_to t('.tag_implications'), :controller => 'help', :action => 'tag_implications' %></li>
     <li><%= link_to t('.mass_tag_edit'), :controller => 'help', :action => 'mass_tag_edit' %></li>

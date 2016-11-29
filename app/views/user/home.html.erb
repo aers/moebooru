@@ -15,7 +15,7 @@
   <% else %>
     <h2><%= t('.greet_user', :u => @current_user.name) %></h2>
     <p><%= t('.action_info') %></p>
-
+    <h2>Please read the <%= link_to "tagging guidelines", :controller => 'wiki', :action => 'show', :title => 'tag_guidelines' %> before uploading.</h2>
     <div class="section">
       <ul class="link-page">
         <li><%= link_to t('.logout'), :action => :logout %></li>
